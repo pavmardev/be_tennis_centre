@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('surface');
             $table->string('description');
             $table->integer('price');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

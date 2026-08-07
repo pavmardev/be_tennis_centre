@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('cost');
             $table->integer('duration');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

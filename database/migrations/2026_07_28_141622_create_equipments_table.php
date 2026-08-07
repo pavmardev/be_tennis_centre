@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('unicode');
             $table->integer('price');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

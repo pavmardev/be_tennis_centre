@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('equipment_id')->constrained('equipments')->onDelete('cascade');
             $table->foreignId('reservation_id')->constrained('reservations')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

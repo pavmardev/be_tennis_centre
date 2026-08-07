@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('court_id')->constrained('courts')->onDelete('cascade');
             $table->foreignId('feature_id')->constrained('features')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

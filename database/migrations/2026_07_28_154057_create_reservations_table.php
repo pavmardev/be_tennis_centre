@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('court_id')->constrained('courts')->onDelete('cascade');
             $table->foreignId('time_slot_id')->constrained('time_slots')->onDelete('cascade');
             $table->date('reservation_date');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
