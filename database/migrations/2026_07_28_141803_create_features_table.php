@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('features', function (Blueprint $table) {
             $table->id();
+            $table->morphs('featureable');
             $table->string('description');
             $table->softDeletes();
             $table->timestamps();

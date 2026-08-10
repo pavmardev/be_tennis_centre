@@ -20,7 +20,6 @@ return new class extends Migration
             $table->enum('role', ['user', 'admin'])->default('user');
             $table->foreignId('membership_id')->nullable()->constrained('memberships')->onDelete('cascade');
             $table->rememberToken();
-            $table->softDeletes();
             $table->timestamps();
         });
     }
