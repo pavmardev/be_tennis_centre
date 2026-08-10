@@ -10,7 +10,11 @@ class Equipment extends Model
 
     protected $table = 'equipments';
 
+    protected $primaryKey = 'id';
+
     protected $fillable = ['name', 'description', 'unicode', 'price'];
+
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function reservations(): BelongsToMany
     {
