@@ -1,0 +1,33 @@
+<?php
+
+use App\Http\Controllers\CourtController;
+use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\UserController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+
+Route::delete('user/{user}', [UserController::class, 'destroy']);
+Route::delete('reservation/{reservation}', [ReservationController::class, 'destroy']);
+
+Route::get('courts', [CourtController::class, 'index']);
+Route::get('courts/{court}', [CourtController::class, 'show']);
+Route::post('court', [CourtController::class, 'store']);
+Route::delete('court/{court}', [CourtController::class, 'destroy']);
+
+
+Route::get('equipment', [EquipmentController::class, 'index']);
+Route::get('equipment/{equipment}', [EquipmentController::class, 'show']);
+Route::post('equipment', [EquipmentController::class, 'store']);
+Route::put('equipment/{equipment}', [EquipmentController::class, 'update']);
+Route::delete('equipment/{equipment}', [EquipmentController::class, 'destroy']);
+
+Route::delete('membership/{membership}', [MembershipController::class, 'destroy']);
+Route::get('memberships', [MembershipController::class, 'index']);
+
+Route::get('reservations', [ReservationController::class, 'index']);
