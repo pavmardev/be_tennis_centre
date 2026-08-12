@@ -19,6 +19,7 @@ Route::get('courts', [CourtController::class, 'index']);
 Route::get('courts/{court}', [CourtController::class, 'show']);
 Route::post('court', [CourtController::class, 'store']);
 Route::delete('court/{court}', [CourtController::class, 'destroy']);
+Route::get('courts-random', [CourtController::class, 'randomCourts']);
 
 
 Route::get('equipment', [EquipmentController::class, 'index']);
@@ -26,7 +27,7 @@ Route::get('equipment/{equipment}', [EquipmentController::class, 'show']);
 Route::post('equipment', [EquipmentController::class, 'store']);
 Route::put('equipment/{equipment}', [EquipmentController::class, 'update']);
 Route::delete('equipment/{equipment}', [EquipmentController::class, 'destroy']);
-Route::get('equipment-random', [EquipmentController::class, 'randThree']);
+Route::get('equipment-random', [EquipmentController::class, 'randomEquipment']);
 
 Route::delete('membership/{membership}', [MembershipController::class, 'destroy']);
 Route::get('memberships', [MembershipController::class, 'index']);

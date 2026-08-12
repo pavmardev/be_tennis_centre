@@ -30,7 +30,6 @@ class CourtController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -64,6 +63,11 @@ class CourtController extends Controller
                 'Error' . $exception->getMessage()
             ]);
         }
+    }
+
+    public function randomCourts() {
+        $randomRecords = Court::inRandomOrder()->take(5)->get();
+        return CourtResource::collection($randomRecords);
     }
 
 }
