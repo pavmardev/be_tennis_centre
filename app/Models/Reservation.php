@@ -35,6 +35,6 @@ class Reservation extends Model
 
     public function equipments(): BelongsToMany
     {
-        return $this->belongsToMany(Equipment::class, 'equipment_reservation');
+        return $this->belongsToMany(Equipment::class, 'equipment_reservations');
     }
 }

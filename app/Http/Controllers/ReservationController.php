@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        //
+        return ReservationResource::collection(Reservation::all());
     }
 
     /**
@@ -37,7 +38,6 @@ class ReservationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
     }
 
     /**
