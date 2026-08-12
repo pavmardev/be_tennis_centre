@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MembershipResource;
 use App\Models\Membership;
 use Illuminate\Http\Request;
 use Mockery\Exception;
@@ -13,7 +14,7 @@ class MembershipController extends Controller
      */
     public function index()
     {
-        //
+        return MembershipResource::collection(Membership::all());
     }
 
     /**
