@@ -26,6 +26,7 @@ Route::get('equipment/{equipment}', [EquipmentController::class, 'show']);
 Route::post('equipment', [EquipmentController::class, 'store']);
 Route::put('equipment/{equipment}', [EquipmentController::class, 'update']);
 Route::delete('equipment/{equipment}', [EquipmentController::class, 'destroy']);
+Route::get('equipment-random', [EquipmentController::class, 'randThree']);
 
 Route::delete('membership/{membership}', [MembershipController::class, 'destroy']);
 Route::get('memberships', [MembershipController::class, 'index']);

@@ -74,4 +74,10 @@ class EquipmentController extends Controller
             ]);
         }
     }
+
+    public function randThree()
+    {
+        $randomRecords = Equipment::inRandomOrder()->take(5)->get();
+        return EquipmentResource::collection($randomRecords);
+    }
 }
