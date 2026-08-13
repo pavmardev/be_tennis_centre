@@ -13,12 +13,14 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::delete('user/{user}', [UserController::class, 'destroy']);
-Route::delete('reservation/{reservation}', [ReservationController::class, 'destroy']);
+Route::get('users', [UserController::class, 'index']);
+
+Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy']);
 
 Route::get('courts', [CourtController::class, 'index']);
 Route::get('courts/{court}', [CourtController::class, 'show']);
-Route::post('court', [CourtController::class, 'store']);
-Route::delete('court/{court}', [CourtController::class, 'destroy']);
+Route::post('courts', [CourtController::class, 'store']);
+Route::delete('courts/{court}', [CourtController::class, 'destroy']);
 Route::get('courts-random', [CourtController::class, 'randomCourts']);
 
 
@@ -29,7 +31,7 @@ Route::put('equipment/{equipment}', [EquipmentController::class, 'update']);
 Route::delete('equipment/{equipment}', [EquipmentController::class, 'destroy']);
 Route::get('equipment-random', [EquipmentController::class, 'randomEquipment']);
 
-Route::delete('membership/{membership}', [MembershipController::class, 'destroy']);
+Route::delete('memberships/{membership}', [MembershipController::class, 'destroy']);
 Route::get('memberships', [MembershipController::class, 'index']);
 
 Route::get('reservations', [ReservationController::class, 'index']);
