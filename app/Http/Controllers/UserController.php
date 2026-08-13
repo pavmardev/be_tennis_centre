@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 use mysql_xdevapi\Exception;
 
 class UserController extends Controller
@@ -23,7 +25,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|confirmed',
+            'membership' => 'nullable|integer|exists:memberships,id'
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'user',
+            'membership_id' => $validated['membership'],
+        ]);
+
+        return response()->json(['User was successfully created'], Response::HTTP_CREATED);
     }
 
     /**

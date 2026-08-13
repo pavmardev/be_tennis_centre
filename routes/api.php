@@ -15,6 +15,7 @@ Route::get('/user', function (Request $request) {
 Route::delete('users/{user}', [UserController::class, 'destroy']);
 Route::get('users', [UserController::class, 'index']);
 Route::get('users/{user}', [UserController::class, 'show']);
+Route::post('users', [UserController::class, 'store']);
 
 Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy']);
 
