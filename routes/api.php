@@ -12,8 +12,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::delete('user/{user}', [UserController::class, 'destroy']);
+Route::delete('users/{user}', [UserController::class, 'destroy']);
 Route::get('users', [UserController::class, 'index']);
+Route::get('users/{user}', [UserController::class, 'show']);
 
 Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy']);
 
