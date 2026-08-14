@@ -18,6 +18,7 @@ class ReservationResource extends JsonResource
             'name' => $this->user->name,
             'court' => $this->court->name,
             'surface' => $this->court->surface,
+            'reservation_time' => $this->timeSlot->time_slot,
             'reservation_date' => $this->reservation_date,
             'equipment' => $this->equipments->map(function ($item) {
                 return ['name' => $item->name];

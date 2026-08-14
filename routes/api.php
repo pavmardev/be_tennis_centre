@@ -18,7 +18,8 @@ Route::get('users/{user}', [UserController::class, 'show']);
 Route::post('users', [UserController::class, 'store']);
 Route::patch('users/{user}', [UserController::class, 'update']);
 
-
+Route::get('reservations', [ReservationController::class, 'index']);
+Route::get('reservations/{reservation}', [ReservationController::class, 'show']);
 Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy']);
 
 Route::get('courts', [CourtController::class, 'index']);
@@ -38,4 +39,3 @@ Route::get('equipment-random', [EquipmentController::class, 'randomEquipment']);
 Route::delete('memberships/{membership}', [MembershipController::class, 'destroy']);
 Route::get('memberships', [MembershipController::class, 'index']);
 
-Route::get('reservations', [ReservationController::class, 'index']);

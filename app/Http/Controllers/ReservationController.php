@@ -14,7 +14,8 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        return ReservationResource::collection(Reservation::all());
+        $reservations = Reservation::with(['court', 'user', 'equipments', 'timeSlot'])->get();
+        return ReservationResource::collection($reservations);
     }
 
     /**
@@ -28,9 +29,10 @@ class ReservationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Reservation $reservation)
     {
-        //
+        $reservation->with(['court', 'user', 'equipments', 'timeSlot']);
+        return new ReservationResource($reservation);
     }
 
     /**
