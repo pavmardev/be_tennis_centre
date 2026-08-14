@@ -56,9 +56,16 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'nullable|string',
+            'email' => 'nullable|string|email',
+            'membership_id' => 'nullable|integer|exists:memberships,id'
+        ]);
+
+        $user->update($validated);
+        return response()->json(['User was successfully updated'], Response::HTTP_OK);
     }
 
     /**
