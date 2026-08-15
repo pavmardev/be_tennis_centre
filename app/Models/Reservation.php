@@ -14,7 +14,7 @@ class Reservation extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['user_id', 'court_id', 'time_slot_id', 'date'];
+    protected $fillable = ['user_id', 'court_id', 'time_slot_id', 'reservation_date'];
 
     protected $hidden = ['deleted_at', 'created_at', 'updated_at'];
 

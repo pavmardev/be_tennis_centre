@@ -20,6 +20,7 @@ Route::patch('users/{user}', [UserController::class, 'update']);
 
 Route::get('reservations', [ReservationController::class, 'index']);
 Route::get('reservations/{reservation}', [ReservationController::class, 'show']);
+Route::post('reservations', [ReservationController::class, 'store']);
 Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy']);
 
 Route::get('courts', [CourtController::class, 'index']);

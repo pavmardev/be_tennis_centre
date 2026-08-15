@@ -6,6 +6,9 @@ use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class ReservationController extends Controller
 {
@@ -23,9 +26,38 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'court_id' => 'required|integer|exists:courts,id',
+            'time_slot_id' => 'required|integer|exists:time_slots,id',
+            'reservation_date' => 'required|string|date',
+            'equipment' => 'nullable|array',
+            'equipment.*' => 'integer|exists:equipments,id'
+        ]);
 
+        $equipmentIds = [];
+        if (!empty($validated['equipment'])) {
+            $equipmentIds = $validated['equipment'];
+        }
+
+        $reservationData = Arr::except($validated, ['equipment']);
+
+        $reservation = DB::transaction(function () use ($reservationData, $equipmentIds) {
+            $reservation = Reservation::create($reservationData);
+
+            if (!empty($equipmentIds)) {
+                $reservation->equipments()->attach($equipmentIds);
+            }
+            return $reservation;
+        });
+
+        $reservation->with('equipment');
+
+        return response()->json([
+            'message' => 'Reservation was successfully created',
+            'data' => new ReservationResource($reservation)
+        ], Response::HTTP_CREATED);
+    }
     /**
      * Display the specified resource.
      */
