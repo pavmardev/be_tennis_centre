@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MembershipResource;
 use App\Models\Membership;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Mockery\Exception;
 
 class MembershipController extends Controller
@@ -22,15 +23,23 @@ class MembershipController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        /*$validated = $request->validate([
+            'name' => 'required|string',
+            'cost' => 'required|numeric',
+            'duration' => 'nullable|integer',
+        ]);
+        $membership = Membership::create($validated);
+        return new MembershipResource($membership);
+        */
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Membership $membership)
     {
-        //
+        $membership->load('features');
+        return new MembershipResource($membership);
     }
 
     /**
@@ -46,15 +55,7 @@ class MembershipController extends Controller
      */
     public function destroy(Membership $membership)
     {
-        try {
-            $membership->delete();
-            return response()->json([
-                'Membership' . $membership . 'was successfully deleted'
-            ]);
-        } catch (Exception $exception) {
-            return response()->json([
-                'Error' . $exception->getMessage()
-            ]);
-        }
+        $membership->delete();
+        return response()->json('Membership deleted', Response::HTTP_OK);
     }
 }

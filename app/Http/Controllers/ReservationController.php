@@ -17,6 +17,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Reservation::class);
         $reservations = Reservation::with(['court', 'user', 'equipments', 'timeSlot'])->get();
         return ReservationResource::collection($reservations);
     }
@@ -63,6 +64,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
+        $this->authorize('view', $reservation);
         $reservation->with(['court', 'user', 'equipments', 'timeSlot']);
         return new ReservationResource($reservation);
     }
@@ -70,8 +72,9 @@ class ReservationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Reservation $reservation)
     {
+        $this->authorize('update', $reservation);
     }
 
     /**
@@ -79,15 +82,11 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        try {
-            $reservation->delete();
-            return response()->json([
-                'User' . $reservation . 'was successfully deleted'
-            ]);
-        } catch (Exception $exception) {
-            return response()->json([
-                'Error' . $exception->getMessage()
-            ]);
-        }
+        $this->authorize('delete', $reservation);
+
+        $reservation->delete();
+        return response()->json([
+            'message' => 'Reservation was successfully deleted'
+        ], Response::HTTP_OK);
     }
 }

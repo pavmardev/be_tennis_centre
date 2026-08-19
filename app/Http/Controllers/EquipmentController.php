@@ -6,6 +6,7 @@ use App\Http\Resources\EquipmentResource;
 use App\Models\Equipment;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class EquipmentController extends Controller
 {
@@ -63,19 +64,11 @@ class EquipmentController extends Controller
      */
     public function destroy(Equipment $equipment)
     {
-        try {
-            $equipment->delete();
-            return response()->json([
-                'Equipment' . $equipment . 'was successfully deleted'
-            ]);
-        } catch (Exception $exception) {
-            return response()->json([
-                'Error' . $exception->getMessage()
-            ]);
-        }
+        $equipment->delete();
+        return response()->json('Equipment deleted', Response::HTTP_OK);
     }
 
-    public function randThree()
+    public function randomEquipment()
     {
         $randomRecords = Equipment::inRandomOrder()->take(5)->get();
         return EquipmentResource::collection($randomRecords);

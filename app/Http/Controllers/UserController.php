@@ -16,6 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', User::class);
         $users = User::with('membership')->get();
         return UserResource::collection($users);
     }
@@ -48,6 +49,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $this->authorize('view', $user);
         $user->load('membership');
 
         return new UserResource($user);
@@ -64,6 +66,7 @@ class UserController extends Controller
             'membership_id' => 'nullable|integer|exists:memberships,id'
         ]);
 
+        $this->authorize('update', $user);
         $user->update($validated);
         return response()->json(['User was successfully updated'], Response::HTTP_OK);
     }
@@ -73,16 +76,9 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        try {
-            $user->delete();
-            return response()->json([
-                'User' . $user . 'was successfully deleted'
-            ]);
-        } catch (Exception $exception) {
-            return response()->json([
-                'Error' . $exception->getMessage()
-            ]);
-        }
+        $this->authorize('delete', $user);
+        $user->delete();
+        return response()->json('User was successfully deleted', Response::HTTP_OK);
 
     }
 }

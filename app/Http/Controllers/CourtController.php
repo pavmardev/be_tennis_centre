@@ -6,8 +6,10 @@ use App\Http\Resources\CourtResource;
 use App\Models\Court;
 
 
+use App\Models\Feature;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Mockery\Exception;
 
@@ -30,6 +32,21 @@ class CourtController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'surface' => 'required|string|in:clay,grass,indoor',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'features' => 'required|array|exists:features,id',
+        ]);
+
+        $featureIds = Arr::pull($validated, 'features');
+        $court = Court::create($validated);
+
+        $features = Feature::findMany($featureIds);
+        $court->features()->saveMany($features);
+
+        return response()->json(['court' => new CourtResource($court)], Response::HTTP_CREATED);
     }
 
     /**
@@ -53,16 +70,7 @@ class CourtController extends Controller
      */
     public function destroy(Court $court)
     {
-        try {
-            $court->delete();
-            return response()->json([
-                'Court' . $court . 'was successfully deleted'
-            ]);
-        } catch (Exception $exception) {
-            return response()->json([
-                'Error' . $exception->getMessage()
-            ]);
-        }
+        $court->delete();
     }
 
     public function randomCourts() {
