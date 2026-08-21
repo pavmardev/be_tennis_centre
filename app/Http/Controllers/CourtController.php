@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Mockery\Exception;
 
 class CourtController extends Controller
@@ -37,16 +38,24 @@ class CourtController extends Controller
             'surface' => 'required|string|in:clay,grass,indoor',
             'description' => 'required|string',
             'price' => 'required|numeric',
-            'features' => 'required|array|exists:features,id',
+            'features' => 'required|array',
+            'features.*.id' => 'required|integer|exists:features,id',
         ]);
 
-        $featureIds = Arr::pull($validated, 'features');
-        $court = Court::create($validated);
+        $featuresObjects = Arr::pull($validated, 'features');
+        $featureIds = array_column($featuresObjects, 'id');
+        $court = DB::transaction(function () use ($validated, $featureIds) {
+            $court = Court::create($validated);
+            $court->features()->sync($featureIds);
 
-        $features = Feature::findMany($featureIds);
-        $court->features()->saveMany($features);
+            return $court;
+        });
 
-        return response()->json(['court' => new CourtResource($court)], Response::HTTP_CREATED);
+        $court->load('features');
+
+        return response()->json([
+            'court' => new CourtResource($court)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -60,9 +69,29 @@ class CourtController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Court $court)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'surface' => 'required|string|in:clay,grass,indoor',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'features' => 'required|array',
+            'features.*id' => 'required|integer|exists:features,id',
+        ]);
+
+        $featuresObjects = Arr::pull($validated, 'features');
+        $featureIds = array_column($featuresObjects, 'id');
+        DB::transaction(function () use ($validated, $featureIds, $court) {
+            $court->update($validated);
+            $court->features()->sync($featureIds);
+        });
+        $court->load('features');
+
+        return response()->json([
+            'message' => 'Court was successfully updated',
+            'court' => new CourtResource($court)
+        ]);
     }
 
     /**

@@ -25,6 +25,5 @@ class Court extends Model
 
     public function features(): MorphToMany
     {
-        return $this->morphToMany(Feature::class, 'featureable');
-    }
+        return $this->morphToMany(Feature::class, 'featureable');    }
 }

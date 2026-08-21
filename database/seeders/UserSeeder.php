@@ -14,28 +14,32 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::insert([
+        $users = [
             [
                 'name' => 'Jozef Adamec',
                 'email' => 'jozo@gmail.com',
-                'password' => Hash::make('jozo'),
+                'password' => 'jozo',
                 'role' => 'admin',
                 'membership_id' => null
             ],
             [
                 'name' => 'František Danko',
                 'email' => 'fero@gmail.com',
-                'password' => Hash::make('fero'),
+                'password' => 'fero',
                 'role' => 'user',
                 'membership_id' => null
             ],
             [
                 'name' => 'Lukáš Fitoš',
                 'email' => 'luki@gmail.com',
-                'password' => Hash::make('luki'),
+                'password' => 'luki',
                 'role' => 'user',
                 'membership_id' => 1
-            ]]
-        );
+            ]
+        ];
+
+        foreach ($users as $userData) {
+            User::create($userData);
+        }
     }
 }

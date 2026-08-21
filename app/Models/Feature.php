@@ -23,13 +23,13 @@ class Feature extends Model
         return $this->morphTo();
     }
 
-    /*public function memberships(): BelongsToMany
+    public function courts()
     {
-        return $this->belongsToMany(Membership::class, 'membership_features');
+        return $this->morphedByMany(Court::class, 'featureable');
     }
 
-    public function courts(): BelongsToMany
+    public function memberships()
     {
-        return $this->belongsToMany(Court::class, 'court_features');
-    }*/
+        return $this->morphedByMany(Membership::class, 'featureable');
+    }
 }

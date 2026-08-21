@@ -23,8 +23,8 @@ class Membership extends Model
         return $this->hasMany(User::class);
     }
 
-    public function features(): MorphMany
+    public function features(): MorphToMany
     {
-        return $this->morphMany(Feature::class, 'featureable');
+        return $this->morphToMany(Feature::class, 'featureable');
     }
 }

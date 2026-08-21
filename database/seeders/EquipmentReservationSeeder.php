@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\EquipmentReservation;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EquipmentReservationSeeder extends Seeder
 {
@@ -13,7 +13,7 @@ class EquipmentReservationSeeder extends Seeder
      */
     public function run(): void
     {
-        EquipmentReservation::insert([
+        DB::table('equipment_reservations')->insert([
             [
                 'equipment_id' => 1,
                 'reservation_id' => 1,

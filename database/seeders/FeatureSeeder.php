@@ -1,11 +1,9 @@
 <?php
-
 namespace Database\Seeders;
 
 use App\Models\Court;
 use App\Models\Feature;
 use App\Models\Membership;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class FeatureSeeder extends Seeder
@@ -15,21 +13,26 @@ class FeatureSeeder extends Seeder
      */
     public function run(): void
     {
-        $courts = Court::all();
-        $memberships = Membership::all();
-
-        $featurables = $memberships->concat($courts);
-
-        if ($featurables->isEmpty()) {
-            $featurables = Court::factory(3)->create()->concat(Membership::factory(3)->create());
-
+        if (Court::count() === 0) {
+            Court::factory(3)->create();
         }
 
-        $featurables->each(function ($featurable) {
-            Feature::factory(2)->make()->each(function (Feature $feature) use ($featurable) {
-                $feature->featureable()->associate($featurable);
-                $feature->save();
-            });
+        if (Membership::count() === 0) {
+            Membership::factory(3)->create();
+        }
+
+        $features = Feature::factory(6)->create();
+
+        Court::all()->each(function (Court $court) use ($features) {
+            $court->features()->attach(
+                $features->random(rand(1, 3))->pluck('id')
+            );
+        });
+
+        Membership::all()->each(function (Membership $membership) use ($features) {
+            $membership->features()->attach(
+                $features->random(rand(1, 2))->pluck('id')
+            );
         });
     }
 }

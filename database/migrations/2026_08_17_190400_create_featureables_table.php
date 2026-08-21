@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('features', function (Blueprint $table) {
-            $table->id();
-            $table->string('description');
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('featureables', function (Blueprint $table) {
+            $table->foreignId('feature_id')->constrained()->cascadeOnDelete();
+            $table->morphs('featureable');
+            $table->primary(['feature_id', 'featureable_id', 'featureable_type']);
         });
     }
 
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('features');
+        Schema::dropIfExists('featureables');
     }
 };
