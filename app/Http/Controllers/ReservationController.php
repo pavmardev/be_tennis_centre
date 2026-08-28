@@ -91,6 +91,28 @@ class ReservationController extends Controller
     public function update(Request $request, Reservation $reservation)
     {
         $this->authorize('update', $reservation);
+
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'court_id' => 'required|integer|exists:courts,id',
+            'time_slot_id' => 'required|integer|exists:time_slots,id',
+            'reservation_date' => 'required|date|date_format:Y-m-d|after_or_equal:today',
+            'equipment' => 'nullable|array',
+            'equipment.*' => 'integer|exists:equipments,id'
+        ]);
+
+        $equipmentIds = $validated['equipment'] ?? [];
+        $reservationData = Arr::except($validated, ['equipment']);
+
+        DB::transaction(function () use ($reservationData, $equipmentIds, $reservation) {
+            $reservation->update($reservationData);
+            $reservation->equipments()->sync($equipmentIds);
+        });
+
+        return response()->json([
+            'message' => 'Reservation was successfully updated',
+            'data' => new ReservationResource($reservation->fresh(['equipments']))
+        ], Response::HTTP_ACCEPTED);
     }
 
     /**
