@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourtController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserController;
@@ -91,5 +92,12 @@ Route::middleware('auth:sanctum')->group(function () {
         // Admin zoznamy
         Route::get('users', [UserController::class, 'index']);
         Route::get('reservations', [ReservationController::class, 'index']);
+
+        // Features
+        Route::get('features', [FeatureController::class, 'index']);
+        Route::get('features/{feature}', [FeatureController::class, 'show']);
+        Route::post('features', [FeatureController::class, 'store']);
+        Route::put('features/{feature}', [FeatureController::class, 'update']);
+        Route::delete('features/{feature}', [FeatureController::class, 'destroy']);
     });
 });

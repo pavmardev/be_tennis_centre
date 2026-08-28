@@ -12,7 +12,7 @@ class AuthController extends Controller
     public function register(Request $request) {
         $validated = $request->validate([
             'name' => 'required|string',
-            'password' => 'required|string|confirmed|min:8|',
+            'password' => 'required|string|confirmed|min:8',
             'email' => 'required|string|email|unique:users',
         ]);
 
@@ -25,11 +25,8 @@ class AuthController extends Controller
             'membership_id' => null,
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
             'message' => 'Register successfully',
-            'token' => $token,
         ], Response::HTTP_CREATED);
     }
 
