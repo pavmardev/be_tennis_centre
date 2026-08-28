@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
+use App\Models\TimeSlot;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -31,28 +33,42 @@ class ReservationController extends Controller
             'user_id' => 'required|integer|exists:users,id',
             'court_id' => 'required|integer|exists:courts,id',
             'time_slot_id' => 'required|integer|exists:time_slots,id',
-            'reservation_date' => 'required|string|date',
+            'reservation_date' => 'required|date|date_format:Y-m-d|after_or_equal:today',
             'equipment' => 'nullable|array',
             'equipment.*' => 'integer|exists:equipments,id'
         ]);
 
-        $equipmentIds = [];
-        if (!empty($validated['equipment'])) {
-            $equipmentIds = $validated['equipment'];
-        }
-
+        $equipmentIds = $validated['equipment'] ?? [];
         $reservationData = Arr::except($validated, ['equipment']);
 
-        $reservation = DB::transaction(function () use ($reservationData, $equipmentIds) {
-            $reservation = Reservation::create($reservationData);
+        try {
+            $reservation = DB::transaction(function () use ($reservationData, $equipmentIds) {
 
-            if (!empty($equipmentIds)) {
-                $reservation->equipments()->attach($equipmentIds);
-            }
-            return $reservation;
-        });
+                TimeSlot::where('id', $reservationData['time_slot_id'])->lockForUpdate()->first();
 
-        $reservation->with('equipment');
+                $isAlreadyBooked = Reservation::where('court_id', $reservationData['court_id'])
+                    ->where('reservation_date', $reservationData['reservation_date'])
+                    ->where('time_slot_id', $reservationData['time_slot_id'])
+                    ->exists();
+
+                if ($isAlreadyBooked) {
+                    throw new \Exception('Vybraný kurt je v tomto termíne už rezervovaný.');
+                }
+
+                $reservation = Reservation::create($reservationData);
+
+                if (!empty($equipmentIds)) {
+                    $reservation->equipments()->attach($equipmentIds);
+                }
+
+                return $reservation;
+            });
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], Response::HTTP_CONFLICT); // 409 Conflict
+        }
+        $reservation->load(['equipments', 'court', 'timeSlot']);
 
         return response()->json([
             'message' => 'Reservation was successfully created',
@@ -88,5 +104,12 @@ class ReservationController extends Controller
         return response()->json([
             'message' => 'Reservation was successfully deleted'
         ], Response::HTTP_OK);
+    }
+
+    public function reservationsOfUser(User $user)
+    {
+        $this->authorize('view', $user);
+        $reservations = $user->reservations()->with(['court', 'timeSlot'])->get();
+        return ReservationResource::collection($reservations);
     }
 }

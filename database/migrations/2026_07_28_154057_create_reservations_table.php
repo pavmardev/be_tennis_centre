@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->unique(['court_id', 'reservation_date', 'time_slot_id']);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('court_id')->constrained('courts')->onDelete('cascade');
             $table->foreignId('time_slot_id')->constrained('time_slots')->onDelete('cascade');
